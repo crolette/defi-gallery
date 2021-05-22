@@ -1,7 +1,6 @@
 const container = document.querySelector(".container");
 const loader = document.querySelector(".loader");
 const images = document.querySelectorAll(".fas")
-console.log(images)
 const popup = document.querySelector(".popup")
 let search = "beer"
 let index = 0;
@@ -15,13 +14,12 @@ const closeModal = document.querySelector(".close");
 const regexSearch =/^[a-zA-Z](([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
 let searchValue = document.querySelector("#search-value")
 const form = document.querySelector(".search")
+const errorMessage = document.querySelector(".error-search")
 
 
 addMarginContainer = () => {
     const topBarHeight = document.querySelector(".top-bar").offsetHeight;
-    console.log(topBarHeight)
     const marginTopContainer = topBarHeight + 64;
-    console.log(marginTopContainer)
     container.style.marginTop = `${marginTopContainer}px`;
 }
 
@@ -141,6 +139,7 @@ window.addEventListener("scroll", () => {
 })
 
 
+// fonction qui ajoute les images dans le container
 function addStuff(width, height, denom){
     
     const newItem = document.createElement("div")
@@ -160,7 +159,6 @@ function addStuff(width, height, denom){
 
 
 // Popup recherche
-
 addPopup = () => {
     modal.style.display = "block";
 }
@@ -177,20 +175,30 @@ window.onclick = function(event) {
   }
 }
 
-
+// lors d'un refresh on remonte au top de la page
 window.onbeforeunload = () => {
-    window.scrollTo(0,0); 
+    window.scrollTo(0,0);
+    // return 
 }
 
 
+// on enlève le message d'erreur et le texte en rouge
+searchValue.addEventListener("keyup", function(e) {
+    if(searchValue.classList.contains("red")){
+        searchValue.classList.toggle("red")
+        errorMessage.classList.toggle("active")
+    }
+})
 
 
-
-
+// eventListener sur le formulaire qu'on le submit
 form.addEventListener("submit", function(e){
-    if(searchValue.value.match(regexSearch) === null){
+
+    // si la valeur de la recherche ne correspond pas au regex on active l'erreur et on envoie pas le formulaire
+    if(searchValue.value.match(regexSearch) === null || searchValue.value === "C'est pas bon non'di'dju!"){
         searchValue.classList.add("red")
-        searchValue.placeholder = "C'est pas bon"
+        errorMessage.classList.add("active")
+        searchValue.value = "C'est pas bon non'di'dju!"
         e.preventDefault();
     } else {
         loadElements();
